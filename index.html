@@ -1,71 +1,767 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>DevOps CI/CD Project</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: #eef2ff;
-            margin: 0;
-            padding: 50px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodieHub | Online Food Ordering</title>
 
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            max-width: 650px;
-            margin: auto;
-            box-shadow: 0 4px 15px #cccccc;
-        }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-        h1 {
-            color: #2563eb;
-        }
+    body {
+      background: #fffaf5;
+      color: #292524;
+    }
 
-        p {
-            color: #444;
-            font-size: 18px;
-        }
+    header {
+      background: white;
+      padding: 18px 7%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px #0000000c;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
 
-        .success {
-            color: green;
-            font-weight: bold;
-        }
-    </style>
+    .logo {
+      color: #ed5b2a;
+      font-size: 27px;
+      font-weight: bold;
+    }
+
+    nav a {
+      color: #444;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 600;
+    }
+
+    nav a:hover {
+      color: #ed5b2a;
+    }
+
+    .cart-button {
+      background: #ed5b2a;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 11px 19px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .hero {
+      margin: 28px auto;
+      width: 86%;
+      min-height: 350px;
+      border-radius: 22px;
+      padding: 55px;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(90deg, #21150de8, #21150d40),
+        url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1400");
+      background-size: cover;
+      background-position: center;
+      color: white;
+    }
+
+    .hero-content {
+      max-width: 520px;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      margin-bottom: 18px;
+      line-height: 1.15;
+    }
+
+    .hero p {
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 25px;
+    }
+
+    .hero button, .primary-button {
+      background: #ed5b2a;
+      color: white;
+      padding: 13px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .section {
+      width: 86%;
+      margin: 55px auto;
+    }
+
+    .section h2 {
+      font-size: 29px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #777;
+      margin-bottom: 25px;
+    }
+
+    .search-area {
+      display: flex;
+      gap: 12px;
+      margin: 25px 0;
+    }
+
+    .search-area input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      font-size: 15px;
+      outline-color: #ed5b2a;
+    }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .category {
+      padding: 10px 20px;
+      border: 1px solid #eee;
+      background: white;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    .category.active, .category:hover {
+      background: #ed5b2a;
+      color: white;
+      border-color: #ed5b2a;
+    }
+
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .food-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px #0000000c;
+      transition: transform .2s;
+    }
+
+    .food-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .food-card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+    }
+
+    .food-info {
+      padding: 17px;
+    }
+
+    .food-info h3 {
+      margin-bottom: 9px;
+    }
+
+    .food-info p {
+      color: #777;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 42px;
+    }
+
+    .food-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 17px;
+    }
+
+    .price {
+      color: #ed5b2a;
+      font-size: 19px;
+      font-weight: bold;
+    }
+
+    .add-button {
+      background: #fff0e9;
+      color: #ed5b2a;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .add-button:hover {
+      background: #ed5b2a;
+      color: white;
+    }
+
+    .cart-panel {
+      display: none;
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 370px;
+      max-width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      background: white;
+      z-index: 30;
+      padding: 25px;
+      box-shadow: -5px 0 25px #0002;
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .close-button {
+      border: none;
+      background: #f4f4f4;
+      padding: 8px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+
+    .cart-item p {
+      color: #777;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .quantity {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .quantity button {
+      border: none;
+      background: #fff0e9;
+      color: #ed5b2a;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 25px 0;
+    }
+
+    .checkout-button {
+      width: 100%;
+      padding: 14px;
+      background: #ed5b2a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #0009;
+      z-index: 40;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    .modal-content {
+      width: 420px;
+      max-width: 100%;
+      background: white;
+      border-radius: 15px;
+      padding: 28px;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 18px;
+    }
+
+    .modal-content input,
+    .modal-content textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 9px 0;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+      font-size: 15px;
+    }
+
+    .modal-content textarea {
+      resize: vertical;
+      min-height: 75px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .modal-actions button {
+      flex: 1;
+    }
+
+    .cancel-button {
+      background: #eee;
+      color: #333;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    .success-message h2 {
+      color: #218838;
+      margin: 15px 0;
+    }
+
+    footer {
+      background: #241c18;
+      color: white;
+      text-align: center;
+      padding: 28px 15px;
+      margin-top: 65px;
+    }
+
+    footer p {
+      color: #ddd;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 850px) {
+      .food-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      nav {
+        display: none;
+      }
+    }
+
+    @media (max-width: 550px) {
+      .hero {
+        padding: 30px;
+        min-height: 300px;
+      }
+
+      .hero h1 {
+        font-size: 34px;
+      }
+
+      .section, .hero {
+        width: 92%;
+      }
+
+      .food-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding: 15px 4%;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-    <div class="container">
+  <header>
+    <div class="logo">🍴 FoodieHub</div>
 
-        <h1>Automated Website Deployment</h1>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#menu">Food Menu</a>
+      <a href="#about">About</a>
+    </nav>
 
-        <h2>DevOps CI/CD Project</h2>
+    <button class="cart-button" onclick="openCart()">
+      🛒 Cart (<span id="cartCount">0</span>)
+    </button>
+  </header>
 
-        <p>
-            Welcome to our DevOps project!
-        </p>
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <h1>Delicious Food, Delivered With Love!</h1>
+      <p>
+        Discover your favourite meals, explore delicious flavours
+        and order fresh food from FoodieHub.
+      </p>
+      <button onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">
+        Explore Menu →
+      </button>
+    </div>
+  </section>
 
-        <p>
-            This website demonstrates
-            Continuous Integration and
-            Continuous Deployment using
-            GitHub Actions.
-        </p>
+  <section class="section" id="menu">
+    <h2>Explore Our Menu 🍕</h2>
+    <p class="subtitle">Choose your favourite food and enjoy every bite.</p>
 
-        <p class="success">
-            Website Created Successfully!
-        </p>
+    <div class="search-area">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search for pizza, burger, biryani..."
+        oninput="displayFoods()"
+      >
+    </div>
 
-        <p>
-            Technology Used: HTML, CSS,
-            GitHub and GitHub Actions.
-        </p>
+    <div class="categories">
+      <button class="category active" onclick="filterFoods('All', this)">All</button>
+      <button class="category" onclick="filterFoods('Pizza', this)">🍕 Pizza</button>
+      <button class="category" onclick="filterFoods('Burger', this)">🍔 Burger</button>
+      <button class="category" onclick="filterFoods('Biryani', this)">🍛 Biryani</button>
+      <button class="category" onclick="filterFoods('Dessert', this)">🍰 Desserts</button>
+      <button class="category" onclick="filterFoods('Drinks', this)">🥤 Drinks</button>
+    </div>
+
+    <div class="food-grid" id="foodGrid"></div>
+  </section>
+
+  <section class="section" id="about">
+    <h2>Why Choose FoodieHub?</h2>
+    <p class="subtitle">
+      A simple and convenient way to explore food and place your orders.
+    </p>
+    <p>
+      FoodieHub is an online food ordering website demonstration.
+      Browse the menu, search for food, add items to your cart
+      and calculate your total bill easily.
+    </p>
+  </section>
+
+  <div class="cart-panel" id="cartPanel">
+    <div class="cart-header">
+      <h2>Your Cart 🛒</h2>
+      <button class="close-button" onclick="closeCart()">✕</button>
+    </div>
+
+    <div id="cartItems"></div>
+
+    <div class="cart-total">
+      <span>Total:</span>
+      <span id="cartTotal">₹0</span>
+    </div>
+
+    <button class="checkout-button" onclick="openCheckout()">
+      Proceed to Checkout
+    </button>
+  </div>
+
+  <div class="modal" id="checkoutModal">
+    <div class="modal-content">
+
+      <div id="checkoutForm">
+        <h2>Delivery Details 📍</h2>
+        <form onsubmit="placeOrder(event)">
+          <input type="text" id="customerName" placeholder="Your Name" required>
+          <input type="tel" id="customerPhone" placeholder="Phone Number"
+                 pattern="[0-9]{10}" title="Enter a 10-digit phone number" required>
+          <textarea id="customerAddress" placeholder="Delivery Address" required></textarea>
+
+          <p><strong>Payment:</strong> Cash on Delivery (Demo)</p>
+
+          <div class="modal-actions">
+            <button type="button" class="cancel-button" onclick="closeCheckout()">
+              Cancel
+            </button>
+            <button type="submit" class="primary-button">
+              Place Order
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="success-message" id="successMessage">
+        <div style="font-size:55px">✅</div>
+        <h2>Order Placed Successfully!</h2>
+        <p>Thank you for choosing FoodieHub.</p>
+        <p id="orderSummary" style="margin:15px 0"></p>
+        <button class="primary-button" onclick="finishOrder()">Continue Shopping</button>
+      </div>
 
     </div>
+  </div>
+
+  <footer>
+    <h2>🍴 FoodieHub</h2>
+    <p>Fresh Food | Great Taste | Happy Moments</p>
+    <p>© 2026 FoodieHub. Student Project Demonstration.</p>
+  </footer>
+
+  <script>
+    const foods = [
+      {
+        id: 1, name: "Margherita Pizza", category: "Pizza", price: 199,
+        description: "Classic pizza with cheese and fresh tomato.",
+        image: "https://images.unsplash.com/photo-1579751626657-72bc17010498?w=600"
+      },
+      {
+        id: 2, name: "Veg Burger", category: "Burger", price: 129,
+        description: "Crispy vegetable patty with fresh vegetables.",
+        image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600"
+      },
+      {
+        id: 3, name: "Chicken Biryani", category: "Biryani", price: 249,
+        description: "Aromatic rice with delicious spices and chicken.",
+        image: "https://images.unsplash.com/photo-1563379091339-03246963d96c?w=600"
+      },
+      {
+        id: 4, name: "Cheese Pizza", category: "Pizza", price: 229,
+        description: "A cheesy pizza made for cheese lovers.",
+        image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600"
+      },
+      {
+        id: 5, name: "Chicken Burger", category: "Burger", price: 179,
+        description: "Juicy chicken burger with tasty sauce.",
+        image: "https://images.unsplash.com/photo-1553979459-d2229ba7433a?w=600"
+      },
+      {
+        id: 6, name: "Veg Biryani", category: "Biryani", price: 179,
+        description: "Flavourful vegetable biryani with spices.",
+        image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=600"
+      },
+      {
+        id: 7, name: "Chocolate Cake", category: "Dessert", price: 99,
+        description: "Soft and rich chocolate dessert.",
+        image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600"
+      },
+      {
+        id: 8, name: "Ice Cream", category: "Dessert", price: 79,
+        description: "Creamy and delicious ice cream.",
+        image: "https://images.unsplash.com/photo-1501446529957-6226bd447c46?w=600"
+      },
+      {
+        id: 9, name: "Cold Coffee", category: "Drinks", price: 89,
+        description: "Refreshing chilled coffee drink.",
+        image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600"
+      }
+    ];
+
+    let cart = JSON.parse(localStorage.getItem("foodieCart")) || [];
+    let selectedCategory = "All";
+
+    function displayFoods() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+
+      const filtered = foods.filter(food => {
+        const matchesCategory =
+          selectedCategory === "All" || food.category === selectedCategory;
+        const matchesSearch =
+          food.name.toLowerCase().includes(search);
+
+        return matchesCategory && matchesSearch;
+      });
+
+      const grid = document.getElementById("foodGrid");
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "<p>No food items found. Try another search.</p>";
+        return;
+      }
+
+      grid.innerHTML = filtered.map(food => `
+        <div class="food-card">
+          <img src="${food.image}" alt="${food.name}"
+               onerror="this.src='https://placehold.co/600x400?text=Food'">
+          <div class="food-info">
+            <h3>${food.name}</h3>
+            <p>${food.description}</p>
+            <div class="food-bottom">
+              <span class="price">₹${food.price}</span>
+              <button class="add-button" onclick="addToCart(${food.id})">
+                + Add
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function filterFoods(category, button) {
+      selectedCategory = category;
+
+      document.querySelectorAll(".category").forEach(btn => {
+        btn.classList.remove("active");
+      });
+
+      button.classList.add("active");
+      displayFoods();
+    }
+
+    function saveCart() {
+      localStorage.setItem("foodieCart", JSON.stringify(cart));
+      updateCart();
+    }
+
+    function addToCart(id) {
+      const existing = cart.find(item => item.id === id);
+
+      if (existing) {
+        existing.quantity++;
+      } else {
+        cart.push({ id: id, quantity: 1 });
+      }
+
+      saveCart();
+      alert("Food added to your cart!");
+    }
+
+    function updateCart() {
+      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById("cartCount").textContent = count;
+
+      const container = document.getElementById("cartItems");
+
+      if (cart.length === 0) {
+        container.innerHTML = "<p>Your cart is empty. Add some delicious food!</p>";
+      } else {
+        container.innerHTML = cart.map(item => {
+          const food = foods.find(f => f.id === item.id);
+
+          return `
+            <div class="cart-item">
+              <div>
+                <strong>${food.name}</strong>
+                <p>₹${food.price} each</p>
+              </div>
+              <div class="quantity">
+                <button onclick="changeQuantity(${food.id}, -1)">−</button>
+                <span>${item.quantity}</span>
+                <button onclick="changeQuantity(${food.id}, 1)">+</button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      document.getElementById("cartTotal").textContent = "₹" + getTotal();
+    }
+
+    function getTotal() {
+      return cart.reduce((sum, item) => {
+        const food = foods.find(f => f.id === item.id);
+        return sum + food.price * item.quantity;
+      }, 0);
+    }
+
+    function changeQuantity(id, change) {
+      const item = cart.find(item => item.id === id);
+
+      if (!item) return;
+
+      item.quantity += change;
+
+      if (item.quantity <= 0) {
+        cart = cart.filter(item => item.id !== id);
+      }
+
+      saveCart();
+    }
+
+    function openCart() {
+      document.getElementById("cartPanel").style.display = "block";
+    }
+
+    function closeCart() {
+      document.getElementById("cartPanel").style.display = "none";
+    }
+
+    function openCheckout() {
+      if (cart.length === 0) {
+        alert("Your cart is empty. Please add food first.");
+        return;
+      }
+
+      closeCart();
+      document.getElementById("checkoutModal").style.display = "flex";
+      document.getElementById("checkoutForm").style.display = "block";
+      document.getElementById("successMessage").style.display = "none";
+    }
+
+    function closeCheckout() {
+      document.getElementById("checkoutModal").style.display = "none";
+    }
+
+    function placeOrder(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("customerName").value;
+      const total = getTotal();
+      const orderNumber = "FH" + Date.now().toString().slice(-6);
+
+      document.getElementById("orderSummary").textContent =
+        "Order " + orderNumber + " | Total: ₹" + total +
+        " | Customer: " + name;
+
+      document.getElementById("checkoutForm").style.display = "none";
+      document.getElementById("successMessage").style.display = "block";
+
+      cart = [];
+      saveCart();
+    }
+
+    function finishOrder() {
+      closeCheckout();
+      document.getElementById("checkoutForm").style.display = "block";
+      document.getElementById("successMessage").style.display = "none";
+      document.querySelector("form").reset();
+    }
+
+    displayFoods();
+    updateCart();
+  </script>
 
 </body>
 </html>
+
+    
+   
